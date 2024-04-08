@@ -1,6 +1,5 @@
 package com.example.jpa.repository;
 
-import java.util.Optional;
 import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
