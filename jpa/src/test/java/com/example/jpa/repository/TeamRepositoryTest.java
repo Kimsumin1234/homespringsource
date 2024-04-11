@@ -3,6 +3,7 @@ package com.example.jpa.repository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.jpa.entity.Team;
 import com.example.jpa.entity.TeamMember;
@@ -48,5 +49,37 @@ public class TeamRepositoryTest {
         teamMemberRepository.findByMemberEqualTeam("팀 2").forEach(member -> {
             System.out.println(member);
         });
+    }
+
+    @Test
+    public void updateTest() {
+        // 멤버의 팀을 변경
+        // 수정할 회원을 먼저 조회한다
+        TeamMember member = teamMemberRepository.findById("member 1").get();
+        // 팀이 객체이기 때문에 객체를 만들고 값을 넣어준다
+        Team team = Team.builder().id("team 3").build();
+        member.setTeam(team);
+        System.out.println("수정 후 " + teamMemberRepository.save(member));
+
+    }
+
+    @Test
+    public void deleteTest() {
+        // 팀을 삭제하려면 우선 멤버를 먼저 삭제해야 한다 (자식 먼저 삭제)
+        teamMemberRepository.deleteById("member 5");
+        teamMemberRepository.deleteById("member 1");
+        // 그리고 팀 삭제 (부모 삭제)
+        teamRepository.deleteById("team 3");
+    }
+
+    @Transactional
+    @Test
+    public void getRowTest2() {
+        Team team = teamRepository.findById("team 2").get();
+        System.out.println(team); // Team(id=team 2, name=팀 2)
+
+        team.getTeamMember().forEach(member -> System.out.println(member));
+        // TeamMember(id=member 3, userName=김길동, team=Team(id=team 2, name=팀 2))
+        // TeamMember(id=member 4, userName=이길동, team=Team(id=team 2, name=팀 2))
     }
 }
