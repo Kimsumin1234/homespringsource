@@ -25,4 +25,27 @@ public class GuestBookRepositoryTest {
             guestBookRepository.save(guestBook);
         });
     }
+
+    @Test
+    public void testList() {
+        guestBookRepository.findAll().forEach(guestbook -> System.out.println(guestbook));
+    }
+
+    @Test
+    public void testRow() {
+        System.out.println(guestBookRepository.findById(12L));
+    }
+
+    @Test
+    public void testUpdate() {
+        GuestBook guestBook = guestBookRepository.findById(300L).get();
+        guestBook.setTitle("수정한 title 300");
+        guestBook.setContent("수정한 내용 입니다");
+        System.out.println(guestBookRepository.save(guestBook));
+    }
+
+    @Test
+    public void testDelete() {
+        guestBookRepository.deleteById(4L);
+    }
 }
